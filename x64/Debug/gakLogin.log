@@ -1,0 +1,7 @@
+﻿  login.cpp
+C:\Users\gak\source\repos\gakLogin\gakLogin\login.cpp(61,34): warning C4267: 'argument': conversion from 'size_t' to 'const _Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+  gakLogin.vcxproj -> C:\Users\gak\source\repos\gakLogin\x64\Debug\gakLogin.exe
