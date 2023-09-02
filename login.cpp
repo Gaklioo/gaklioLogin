@@ -2,82 +2,114 @@
 #include <fstream>
 #include <ostream>
 #include <string>
-#include <map>
-
-/*
-First in create user, Read the already created users line by line and assign the Username And Password to the line count as a key
-For login user, Read the already created lines and if the Username and Password fall under the same key, login
-*/
 
 namespace login {
 	using namespace std;
-	map<string, string> userLogin{};
-	map<string, string>::iterator it{};
-	//ToDo: Check if username already exsists
-	//Done: Create Users In File
-	int createUser() {
-		string username{}, password{};
-		int lineCount{};
+
+	bool doesUserExsist(std::string checkUsername) {
 		std::fstream myFile;
 		myFile.open("login.txt");
+		string line{}, usernames{};
+		std::size_t pos = checkUsername.length();
 
+		if (myFile.is_open()) {
+			while (std::getline(myFile, line)) {
+				usernames = line.substr(0, pos);
+
+				if (checkUsername == usernames) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+		myFile.close();
+	}
+
+	int createKeyValue() {
+		std::fstream myFile;
+		myFile.open("login.txt");
+		string line;
+		int lineCount{};
 		if (myFile.is_open()) {
 			string line{};
 			while (std::getline(myFile, line)) {
-				lineCount++;
+				++lineCount;
 			}
 			myFile.close();
 		}
-		std::ofstream myFile2;
-		myFile2.open("login.txt");
-		if (myFile2.is_open()) {
+
+		return lineCount;
+	}
+
+	int createUser() {
+		string username{}, password{}, usernameCheck{};
+		int keyValues = createKeyValue();
+
+		std::ofstream myFile;
+		myFile.open("login.txt", ios::app);
+		if (myFile.is_open()) {
 			std::cout << "Please enter a username: ";
 			std::cin >> username;
-			std::cout << "Please enter a password: ";
-			std::cin >> password;
-			myFile2 << username + "u" << lineCount << "k" << password + "p" << lineCount << "v";
+			if (doesUserExsist(username)) {
+				std::cout << "Username already in use." << std::endl;
+				createUser();
+				std::cin.clear();
+			}
+			else {
+				std::cout << "Please enter a password: ";
+				std::cin >> password;
+				myFile << username << "u" << keyValues << "k" << password + "p" << keyValues << "v" << std::endl;
+			}
 		}
-		myFile2.close();
+		myFile.close();
 		return 0;
 	}
 
-	//ToDo: Check if username and password match
-	//Format: uUsername0 pPassword0
-	//Store username after u before 0, same for password and if the numbers match on both, login successful
-	//Done:
 	int loginUser() {
 		std::fstream myFile;
 		myFile.open("login.txt");
 		string lineFile;
 		string username{}, password{};
-		string checkUsername{}, checkPassword{};
-		string checkOne, checkTwo;
+		string usernameCheck, passwordCheck, checkOne, checkTwo;
 		std::cout << "Please Enter Username: ";
 		std::cin >> username;
 		std::cout << "Please Enter Password: ";
 		std::cin >> password;
+
+		std::size_t pos;
+		std::size_t usernamePos = username.length();
+		std::size_t passwordPos = password.length();
 		if (myFile.is_open()) {
 			while (std::getline(myFile, lineFile)) {
-				checkUsername = lineFile.find(username);
-				std::getline(myFile, checkPassword, 'p');
-				std::getline(myFile, checkOne, 'k');
-				std::getline(myFile, checkTwo, 'v');
-				if (username == checkUsername && password == checkPassword && checkOne == checkTwo) {
-					std::cout << "Login Successful";
-				}
-				std::cout << checkUsername;
-			}
+				usernameCheck = lineFile.substr(0, usernamePos);
+				lineFile.erase(0, usernamePos + 1);
+				pos = lineFile.find('k');
+				checkOne = lineFile.substr(0, pos);
+				lineFile.erase(0, pos + 1);
+				passwordCheck = lineFile.substr(0, passwordPos);
+				lineFile.erase(0, passwordPos + 1);
+				pos = lineFile.find('v');
+				checkTwo = lineFile.substr(0, pos);
+				lineFile.erase(0, pos + 1);
 
-			//std::cout << checkUsername << " <- Username, Password ->" << checkPassword;
+				if (usernameCheck == username && passwordCheck == password && checkOne == checkTwo) {
+					std::cout << "Sucessfully Logged in";
+				}
+				else if (usernameCheck == username && passwordCheck != password) {
+					std::cout << "Incorrect Password";
+				}
+				else if (usernameCheck != username) {
+					std::cout << "Username does not exsist";
+					break;
+				}
+			}
 		}
-		else {
-			std::cout << " CAnnot open fiel;";
-		}
+		myFile.close();
 		return 0;
 	}
 };
 
 int main() {
-	login::createUser();
-	login::loginUser();
+
 }
