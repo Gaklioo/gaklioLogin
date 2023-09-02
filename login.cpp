@@ -59,7 +59,7 @@ namespace login {
 			else {
 				std::cout << "Please enter a password: ";
 				std::cin >> password;
-				myFile << username << "u" << keyValues << "k" << password + "p" << keyValues << "v" << std::endl;
+				myFile << username << "u" << keyValues << "k" << password << "p" << keyValues << "v" << std::endl;
 			}
 		}
 		myFile.close();
