@@ -81,8 +81,3 @@ namespace login {
 	}
 
 }
-
-int main() {
-	login::setMapFromFile();
-	std::cout << login::login();
-}
