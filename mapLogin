@@ -11,7 +11,7 @@ namespace login {
 
 	void writeToFile() {
 		std::ofstream myFile;
-		myFile.open("Login.txt");
+		myFile.open("mapLogin.txt");
 
 		if (myFile.is_open()) {
 			for (it = map.begin(); it != map.end(); it++) {
