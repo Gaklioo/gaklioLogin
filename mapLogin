@@ -9,7 +9,7 @@ namespace login {
 	std::map<std::string, std::string>::iterator it;
 	std::string username, password;
 
-	void writeToFile() {
+	void writeToFile() { // 
 		std::ofstream myFile;
 		myFile.open("mapLogin.txt");
 
@@ -22,9 +22,9 @@ namespace login {
 		myFile.close();
 	}
 
-	void setMapFromFile() {
+	void setMapFromFile() { // Call this before anything else in the login namespace.
 		std::fstream myFile;
-		myFile.open("Login.txt");
+		myFile.open("mapLogin.txt");
 		std::string username, password;
 		std::size_t pos;
 
